@@ -15,12 +15,27 @@ function kickBall() {
   document.getElementById("gameMsg").innerText = msg;
 
   if (success) {
+    // === FIRE THE CONFETTI ===
     confetti({
       particleCount: 150,
       spread: 70,
       origin: { y: 0.6 }
     });
 
+    // === KICK THE FOOTBALL ===
+    const football = document.getElementById("football");
+    if (football) {
+      football.classList.remove("animate-kick"); // reset
+      void football.offsetWidth; // reflow
+      football.classList.add("animate-kick");
+
+      // Optional: reset animation after 2 sec
+      setTimeout(() => {
+        football.classList.remove("animate-kick");
+      }, 2000);
+    }
+
+    // === COUPON CODE REWARD ===
     const couponCode = reward.includes("KICK5") ? "KICK5" : "KICK10";
 
     let rewardHTML = `
