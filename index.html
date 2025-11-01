@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kick 4 Cash</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🏈 KICK 4 CASH</h1>
+    <p>You get 2 kicks per day. Score to unlock savings!</p>
+    <canvas id="gameCanvas" width="400" height="200"></canvas>
+    <div id="gameMsg"></div>
+    <button onclick="kickBall()" class="kick-btn">Kick!</button>
+    <div id="rewardArea"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
