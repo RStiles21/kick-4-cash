@@ -1,23 +1,163 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kick 4 Cash</title>
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+    }
+
+    #football {
+      position: absolute;
+      bottom: 40px;
+      left: 120px;
+      width: 60px;
+      z-index: 10;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .animate-kick {
+      animation: flyToGoal 1s ease-out forwards;
+    }
+
+    @keyframes flyToGoal {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      50%  { transform: translate(100px, -150px) rotate(180deg); }
+      100% { transform: translate(200px, -300px) rotate(360deg); }
+    }
+
+    #gameCanvas {
+      width: 100%;
+      height: 200px;
+      background: url('field-bg.png') no-repeat center center / cover;
+      margin-top: 40px;
+      border-radius: 8px;
+    }
+
+    .kick-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #FD7D0D;
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .kick-btn:hover {
+      background-color: #ffa94d;
+    }
+
+    #rewardArea {
+      margin-top: 20px;
+    }
+  </style>
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>🏈 KICK 4 CASH</h1>
     <p>You get 2 kicks per day. Score to unlock savings!</p>
-    <canvas id="gameCanvas" width="400" height="200"></canvas>
+
+    <!-- 🏈 Football Image -->
+    <img src="kick-4-cash-football-background.png" alt="Football" id="football" />
+
+    <!-- 🟩 Canvas field background -->
+    <div id="gameCanvas"></div>
+
+    <!-- 🎯 Game message -->
     <div id="gameMsg"></div>
+
+    <!-- 🔘 Kick button -->
     <button onclick="kickBall()" class="kick-btn">Kick!</button>
+
+    <!-- 🎁 Reward area -->
     <div id="rewardArea"></div>
   </div>
 
+  <!-- 🎉 Confetti Script -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <script src="game.js"></script>
+
+  <!-- ⚙️ Game Logic -->
+  <script>
+    let tries = parseInt(localStorage.getItem("kick4cash-tries")) || 0;
+
+    function kickBall() {
+      if (tries >= 2) {
+        document.getElementById("gameMsg").innerText =
+          "You've used all your kicks today. Come back tomorrow!";
+        return;
+      }
+
+      // ⚽ Trigger football animation
+      const football = document.getElementById("football");
+      football.classList.remove("animate-kick");
+      void football.offsetWidth; // Force reflow to restart animation
+      football.classList.add("animate-kick");
+
+      // 🎯 Determine success
+      let success = Math.random() > (tries === 0 ? 0 : 0.5);
+      let reward = tries === 0 ? "$5 OFF – KICK5" : "$10 OFF – KICK10";
+      let msg = success
+        ? `🏈 TOUCHDOWN! You scored ${reward}`
+        : "Oof! Just missed. Come back tomorrow.";
+
+      document.getElementById("gameMsg").innerText = msg;
+
+      if (success) {
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        const couponCode = reward.includes("KICK5") ? "KICK5" : "KICK10";
+
+        let rewardHTML = `
+          <p style="font-size: 16px; margin-top: 10px;">
+            Copy your code: <strong>${couponCode}</strong>
+          </p>
+        `;
+
+        if (tries === 1) {
+          rewardHTML += `
+            <a href="#locker-room"
+              style="display: inline-block;
+                    margin-top: 10px;
+                    background: #FD7D0D;
+                    color: #000;
+                    padding: 8px 16px;
+                    border-radius: 6px;
+                    text-decoration: none;">
+              Enter Locker Room
+            </a>
+          `;
+        }
+
+        document.getElementById("rewardArea").innerHTML = rewardHTML;
+      }
+
+      // 📈 Track tries
+      tries++;
+      localStorage.setItem("kick4cash-tries", tries);
+    }
+  </script>
 </body>
 </html>
