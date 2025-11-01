@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
@@ -35,4 +34,28 @@ body {
   background: url('assets/field-bg.png') center / cover no-repeat;
   border-radius: 8px;
   margin-top: 15px;
+}
+
+/* 🏈 Football Style */
+#football {
+  width: 60px;
+  height: auto;
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* 🎯 Animation for football */
+@keyframes flyToGoal {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(100px, -150px) rotate(180deg);
+  }
+  100% {
+    transform: translate(200px, -300px) rotate(360deg);
+  }
 }
